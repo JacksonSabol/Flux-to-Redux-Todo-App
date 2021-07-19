@@ -27,7 +27,6 @@ const fontSizeUpdateAction = (size) => {
 // Grab reference to the username input field and add an event listener for changes to dispatch
 document.getElementById('userNameInput').addEventListener('input', ({ target }) => {
     const name = target.value;
-    console.log('Dispatching: ', name);
     // Now we have an action defined to describe this change to username, so we'll use that
     controlPanelDispatcher.dispatch(usernameUpdateAction(name));
 });
@@ -35,7 +34,6 @@ document.getElementById('userNameInput').addEventListener('input', ({ target }) 
 document.forms.fontSizeForm.fontSize.forEach(element => {
     // Add an event listener to each input tag
     element.addEventListener('change', ({ target }) => {
-        console.info('Dispatching action for font size change... Setting font size to:', target.value)
         // Now we have an action defined to describe this change to the font size, so we'll use that
         controlPanelDispatcher.dispatch(fontSizeUpdateAction(target.value));
     });
@@ -85,8 +83,6 @@ const usersPrefsStore = new UserPrefsStore(controlPanelDispatcher);
 
 // Test the store by adding a listener (similar to registering an action with the dispatcher)
 usersPrefsStore.addListener((state) => {
-    // the listener can just log the current state for now
-    console.info('The current state is: ', state);
     // Now that we have actions described, and our store updating its state depending on the action type, we can reflect those changes on the page
     // We'll use a helper function called render() that takes in our state
     render(state);
