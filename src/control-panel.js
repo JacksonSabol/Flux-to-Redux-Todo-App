@@ -44,11 +44,13 @@ class UserPrefsStore extends Store {
     // Remember that we have to define getInitialState and _onDispatch for specific stores, to override the empty methods of the template store
     getInitialState() {
         // This method will just return the default values for the intial load
-        // We'll just use the hardcoded values from the index.html file
-        return {
+        // First, we check whether preferences have been stored in localStorage, and return the same default values if they have not been
+        return localStorage['preferences'] ? JSON.parse(localStorage.getItem('preferences')) : 
+        {
             username: 'Jim',
             fontSize: 'small'
         };
+        // Next we have to store the user preferences that get updated, when they get updated, after we render the state in our listener
     }
 
     _onDispatch(action) {
@@ -79,13 +81,15 @@ class UserPrefsStore extends Store {
 }
 
 // Now we initialize the store
-const usersPrefsStore = new UserPrefsStore(controlPanelDispatcher);
+const userPrefsStore = new UserPrefsStore(controlPanelDispatcher);
 
 // Test the store by adding a listener (similar to registering an action with the dispatcher)
-usersPrefsStore.addListener((state) => {
+userPrefsStore.addListener((state) => {
     // Now that we have actions described, and our store updating its state depending on the action type, we can reflect those changes on the page
     // We'll use a helper function called render() that takes in our state
     render(state);
+    // Set the updated user preferences in localStorage to preserve them for future use
+    localStorage.setItem('preferences', JSON.stringify(state));
 });
 
 // Helper function to render changes in state to the page, by updating the HTML
@@ -100,7 +104,6 @@ const render = ({ username, fontSize }) => {
 
 };
 
-// Registering the action with the dispatcher of logging the action name
-controlPanelDispatcher.register(action => {
-    console.info('Received action: ', action);
-});
+// Now that we have actions working, we can call render here at the start of the application to get the intial state and render it
+render(userPrefsStore.getUserPrefs());
+// This returns our default state in the store, so let's update that to leverage local storage when possible
