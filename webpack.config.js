@@ -1,7 +1,8 @@
 const path = require('path');
 module.exports = {
+    mode: 'development',
     module: {
-        loaders: [
+        rules: [
             {
                 loader: "babel-loader",
 
@@ -12,9 +13,8 @@ module.exports = {
                 test: /\.js?$/,
 
                 // Options to configure babel with
-                query: {
-                    presets: ['es2015'],
-                    plugins: ['transform-object-rest-spread']
+                options: {
+                    presets: ['@babel/env'],
                 }
             },
         ]

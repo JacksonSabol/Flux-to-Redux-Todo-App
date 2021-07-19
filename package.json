@@ -1,23 +1,26 @@
 {
-  "name": "flux-redux-exemplar",
+  "name": "flux-todo-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --content-base public/ --inline"
+    "start": "webpack serve --content-base public/ --inline"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {  },
-  "engine": "node 7.2.0",
+  "engine": "node 14.15.0",
+  "browserslist": "> 0.25%, not dead",
   "devDependencies": {
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.8",
-    "babel-plugin-transform-object-rest-spread": "^6.19.0",
-    "babel-preset-es2015": "^6.18.0",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2"
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "shortid": "^2.2.16"
   }
 }
