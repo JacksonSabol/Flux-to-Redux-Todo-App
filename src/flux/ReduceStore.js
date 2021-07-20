@@ -14,7 +14,7 @@ export class ReduceStore extends Store {
     _onDispatch(action) {
         // In the pursuit of immutability of data, we want to create a new state without mutating the old state
         // So we can grab the current state and "reduce" it, using the current state and the provided action
-        const newState = reduce(this._state, action);
+        const newState = this.reduce(this._state, action);
         // Check if the action dispatched described and resulted in any changes 
         if(newState !== this._state) {
             // If it did, we want to update the value of the state
