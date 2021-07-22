@@ -98,6 +98,14 @@ class TasksStore extends ReduceStore {
                 //  Create a copy of the state again, but add the new value for showCompletedItems
                 newState = { ...state, tasks: [...state.tasks], showCompletedItems: action.value };
                 return newState;
+            case COMPLETE_TASK:
+                // Create a copy of the state again
+                newState = { ...state, tasks: [...state.tasks] };
+                // Next find the index of the completed/uncompleted task within the new state's tasks
+                const affectedTaskIndex = newState.tasks.findIndex(task => task.id === action.id);
+                // Update the value of the complete property of the affected task
+                newState.tasks[affectedTaskIndex] = { ...newState.tasks[affectedTaskIndex], complete: action.value };
+                return newState;
         }
         // Default to returning the original state, if the action doesn't match something we've defined
         return state;
