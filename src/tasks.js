@@ -127,6 +127,14 @@ const TaskComponent = ({ content, complete, id }) => (
     `
 );
 
+// Hacky way because we lose the ability to 'redo' changes, but set an event listener on the undo button to revertLastState
+document.forms.undo.addEventListener('submit', (e) => {
+    // Prevent form from submitting
+    e.preventDefault();
+    // Have the task store revert to the last state
+    tasksStore.revertLastState();
+});
+
 // Render method to handle DOM changes based on the state of the application, which may be update by the results of actions
 const render = () => {
     // Grab the task section from the DOM
