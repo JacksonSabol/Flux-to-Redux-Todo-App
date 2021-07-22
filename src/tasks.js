@@ -79,8 +79,29 @@ class TasksStore extends ReduceStore {
     reduce(state, action) {
         // For now we can just log that we're reducing the state with some action
         console.log('Reducing state...', state, action);
-        // Then we return the (not actually yet) reduced state
+        // We'll need a copy of the state, but it will depend on the action type we dispatched
+        let newState;
+        switch (action.type) {
+            case CREATE_TASK:
+                // For creating a new task, we'll create a copy of the state using the spread operator
+                // Remember: the spread operator creates a shallow copy of nested data
+                // If we pushed a new task into the tasks array without the second spread for the tasks: property, it would mutate the array
+                newState = { ...state, tasks: [...state.tasks] };
+                // Push the new task to the copy of the state
+                newState.tasks.push({
+                    id: id(),
+                    content: action.value,
+                    complete: false
+                });
+                return newState;
+            case SHOW_TASKS:
+                //  Create a copy of the state again, but add the new value for showCompletedItems
+                newState = { ...state, tasks: [...state.tasks], showCompletedItems: action.value };
+                return newState;
+        }
+        // Default to returning the original state, if the action doesn't match something we've defined
         return state;
+        // After this, the only thing left to do is register a listener on the store to call the render() function with the reduced state
     }
     // Define a helper method to get the current state
     getState() {
@@ -89,7 +110,7 @@ class TasksStore extends ReduceStore {
 }
 
 // Define an HTML template for our tasks - aka a Task Component
-const TaskComponent = ({content, complete, id}) => (
+const TaskComponent = ({ content, complete, id }) => (
     // Parens to implicitly return the contents of the function
     `
     <section>
@@ -106,20 +127,20 @@ const render = () => {
     const state = tasksStore.getState();
     // Next, we want to filter tasks that appear on the page based on whether Show Complete has been toggled
     const rendered = state.tasks.filter(task => state.showCompletedItems ? true : !task.complete)
-    // Then we want to apply the HTML formatting of the TaskComponent to each task we've filtered out of the state
+        // Then we want to apply the HTML formatting of the TaskComponent to each task we've filtered out of the state
         .map(TaskComponent)
         // finally we'll join the array on an empty string to create a contiguous string of HTML
         .join('');
     tasksSection.innerHTML = rendered;
 }
 
-// With a render method and component in place, we need to register listeners for changes to the tasks or the DOM
+// With a render method and component in place, we need to add event listeners for changes to the tasks / the DOM
 document.forms.newTask.addEventListener('submit', (e) => {
     // Prevent form from submitting
     e.preventDefault();
     // Grab the value of the task name input field
     const name = e.target.newTaskName.value;
-    if(name) {
+    if (name) {
         // As long as the task name field isn't empty, dispatch the create task action
         tasksDispatcher.dispatch(createNewTaskAction(name));
         // Empty the input field for re-use
@@ -128,7 +149,7 @@ document.forms.newTask.addEventListener('submit', (e) => {
 });
 
 // Similarly, we'll add a listener to the show complete button to dispatch the show complete action
-document.getElementById('showComplete').addEventListener('change', ({target}) => {
+document.getElementById('showComplete').addEventListener('change', ({ target }) => {
     // Grab the 'checked' value from the input element
     const showComplete = target.checked;
     // Dispatch the show task action with the value of showComplete
@@ -138,8 +159,11 @@ document.getElementById('showComplete').addEventListener('change', ({target}) =>
 // Now we can create a new instance of tasksStore
 const tasksStore = new TasksStore(tasksDispatcher);
 
-// Then we'll test it out with a test dispatch
-tasksDispatcher.dispatch('TEST_DISPATCH');
+// Register a listener with the TasksStore to render() any changes to the page when state is reduced
+tasksStore.addListener(() => {
+    render();
+    // Using a thunk, remembering that the dispatcher expects a function to call, not the result of calling a function
+});
 
 // Call the render function to grabs tasks from the store, and display them when the page loads
 render();
