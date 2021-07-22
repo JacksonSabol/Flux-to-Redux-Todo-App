@@ -5,6 +5,42 @@ import { Dispatcher, ReduceStore } from './flux';
 // Create a tasks/todos specific dispatcher instance
 const tasksDispatcher = new Dispatcher();
 
+// Define Task action names
+const CREATE_TASK = `CREATE_TASK`;
+const SHOW_TASKS = `SHOW_TASKS`;
+const COMPLETE_TASK = `COMPLETE_TASK`;
+
+// Define an action creator for our CREATE_TASK action
+const createNewTaskAction = (content) => {
+    // This action creator just returns an object with a type to describe the action, and the value we want to update with the action
+    // Which in this case, is the CREATE_TASK action where the value is the content of a ToDo item
+    return {
+        type: CREATE_TASK,
+        value: content
+    }
+}
+
+// Define an action creator for showing tasks actions
+const showTaskAction = (show) => {
+    // Similar to creating a new task action, we'll just return an object with a type to describe the action, and the value we want to update with the action
+    // Which is the SHOW_TASKS action description, with the value equal to the boolean 'show'
+    return {
+        type: SHOW_TASKS,
+        value: show
+    }
+}
+
+// Define an action creator for completing tasks actions
+const completeTaskAction = (id, isComplete) => {
+    // Somewhat different than creating a new task action, we want to know which task should be completed
+    // So we return an action with type and value, but also the id of the task to complete
+    return {
+        type: COMPLETE_TASK,
+        id: id,
+        value: isComplete
+    }
+}
+
 // Create a TasksStore by extending our ReduceStore
 class TasksStore extends ReduceStore {
     // We want to overwrite the getInitialState method to provide a default state for the TasksStore
