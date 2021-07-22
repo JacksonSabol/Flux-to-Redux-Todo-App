@@ -88,8 +88,36 @@ class TasksStore extends ReduceStore {
     }
 }
 
+// Define an HTML template for our tasks - aka a Task Component
+const TaskComponent = ({content, complete, id}) => (
+    // Parens to implicitly return the contents of the function
+    `
+    <section>
+        ${content} <input type="checkbox" name="taskCompleteCheck" data-taskid="${id}" ${complete ? "checked" : ""}>
+    </section>
+    `
+);
+
+// Render method to handle DOM changes based on the state of the application, which may be update by the results of actions
+const render = () => {
+    // Grab the task section from the DOM
+    const tasksSection = document.getElementById('tasks');
+    // Then we get a reference to the state
+    const state = tasksStore.getState();
+    // Next, we want to filter tasks that appear on the page based on whether Show Complete has been toggled
+    const rendered = state.tasks.filter(task => state.showCompletedItems ? true : !task.complete)
+    // Then we want to apply the HTML formatting of the TaskComponent to each task we've filtered out of the state
+        .map(TaskComponent)
+        // finally we'll join the array on an empty string to create a contiguous string of HTML
+        .join('');
+    tasksSection.innerHTML = rendered;
+}
+
 // Now we can create a new instance of tasksStore
 const tasksStore = new TasksStore(tasksDispatcher);
 
 // Then we'll test it out with a test dispatch
 tasksDispatcher.dispatch('TEST_DISPATCH');
+
+// Call the render function to grabs tasks from the store, and display them when the page loads
+render();
