@@ -113,6 +113,28 @@ const render = () => {
     tasksSection.innerHTML = rendered;
 }
 
+// With a render method and component in place, we need to register listeners for changes to the tasks or the DOM
+document.forms.newTask.addEventListener('submit', (e) => {
+    // Prevent form from submitting
+    e.preventDefault();
+    // Grab the value of the task name input field
+    const name = e.target.newTaskName.value;
+    if(name) {
+        // As long as the task name field isn't empty, dispatch the create task action
+        tasksDispatcher.dispatch(createNewTaskAction(name));
+        // Empty the input field for re-use
+        e.target.newTaskName.value = null;
+    }
+});
+
+// Similarly, we'll add a listener to the show complete button to dispatch the show complete action
+document.getElementById('showComplete').addEventListener('change', ({target}) => {
+    // Grab the 'checked' value from the input element
+    const showComplete = target.checked;
+    // Dispatch the show task action with the value of showComplete
+    tasksDispatcher.dispatch(showTaskAction(showComplete));
+});
+
 // Now we can create a new instance of tasksStore
 const tasksStore = new TasksStore(tasksDispatcher);
 
