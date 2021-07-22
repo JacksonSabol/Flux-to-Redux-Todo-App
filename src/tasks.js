@@ -132,6 +132,18 @@ const render = () => {
         // finally we'll join the array on an empty string to create a contiguous string of HTML
         .join('');
     tasksSection.innerHTML = rendered;
+
+    // To be able to mark tasks complete and have them update their state, we have to add event listeners to each todo item
+    document.getElementsByName('taskCompleteCheck').forEach(element => {
+        element.addEventListener('change', (e) => {
+            // First we get the id of the task
+            const id = e.target.attributes['data-taskid'].value;
+            // Determine whether that item has been completed by checking the 'checked' property
+            const checked = e.target.checked;
+            // With these, we can dispatch an action to the task dispatcher
+            tasksDispatcher.dispatch(completeTaskAction(id, checked));
+        });
+    });
 }
 
 // With a render method and component in place, we need to add event listeners for changes to the tasks / the DOM
