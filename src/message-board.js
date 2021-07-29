@@ -30,12 +30,19 @@ const defaultState = {
     userStatus: ONLINE
 };
 
-// Create a redux store for the messaging functionality. The createStore method takes a reducer as a parameter, which we don't have yet
-// so we'll just pass a simple function that initializes the default state if no state exists yet
-const store = createStore((state = defaultState) => {
-    // For now, simply return the state
+// Create a reducer for our actions. As usual, a reducer takes a state and an action
+const reducer = (state = defaultState, { type, value }) => {
+    // Switch based on action type
+    switch (type) {
+        case UPDATE_STATUS:
+            // For updating the user's status, we'll just return a copy of the state with the updated userStatus value
+            return { ...state, userStatus: value };
+    }
     return state;
-});
+};
+
+// Create a redux store for the messaging functionality. The createStore method takes a reducer as a parameter
+const store = createStore(reducer);
 
 // Finally, create a render function to render our messages from the store
 const render = () => {
@@ -55,6 +62,9 @@ const render = () => {
         ))
         // join the map to create a string of HTML
         .join('');
+    // Now that we have a reducer for updating the userStatus, we can update it on the DOM
+    // The only change we want is to disable the submission of new messages when the userStatus is set to OFFLINE
+    document.forms.newMessage.fields.disabled = (userStatus === OFFLINE);
 }
 
 // Call the render function to display the messages
