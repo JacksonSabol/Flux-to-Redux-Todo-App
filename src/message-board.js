@@ -1,5 +1,12 @@
 // Bring in the method to create a store in redux
 import { createStore } from "redux";
+// Set constants for userStatus
+export const ONLINE = 'ONLINE';
+export const AWAY = 'AWAY';
+export const BUSY = 'BUSY';
+export const OFFLINE = 'OFFLINE';
+// Set constants for actions
+export const UPDATE_STATUS = 'UPDATE_STATUS';
 // Set a default state to load into the store
 const defaultState = {
     // Add some dummy messages
@@ -20,7 +27,7 @@ const defaultState = {
             content: 'It\'s a part of the pre-commit hook, Ricky.'
         }
     ],
-    userStatus: 'ONLINE'
+    userStatus: ONLINE
 };
 
 // Create a redux store for the messaging functionality. The createStore method takes a reducer as a parameter, which we don't have yet
