@@ -67,5 +67,27 @@ const render = () => {
     document.forms.newMessage.fields.disabled = (userStatus === OFFLINE);
 }
 
+// Actions describe the changes that we want to make in a consistent format for consumption, they don't actually make the change
+// Define the action type for updating a userStatus
+const statusUpdateAction = (value) => {
+    return {
+        // Could throw an error here if the value doesn't match our predefined user statuses in the future
+        type: UPDATE_STATUS,
+        value
+    }
+}
+
+// Now that we have a reducer operating on the store, a render function operating on the DOM, and an action generator
+// we can set up a listener for changes to the userStatus option dropdown, and dispatch those changes accordingly
+document.forms.selectStatus.status.addEventListener('change', (e) => {
+    // Dispatch the statusUpdateAction with the value of the event's target
+    // Versus Flux, we don't have to create a dispatcher, it's built into the store of redux
+    store.dispatch(statusUpdateAction(e.target.value))
+});
 // Call the render function to display the messages
 render();
+
+// Lastly, we need to subscribe to the store, which is similar to the Flux dispatcher.register function, which registers listener functions
+// Whatever function is registered/subscribed to changes with the store will run any time the store changes
+// So naturally we want to pass the render() function here, so that the DOM is updated appropriately
+store.subscribe(render);
