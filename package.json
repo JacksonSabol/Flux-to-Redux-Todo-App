@@ -21,6 +21,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "redux": "^4.1.0",
     "shortid": "^2.2.16"
   }
 }
