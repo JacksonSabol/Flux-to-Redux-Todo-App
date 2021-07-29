@@ -1,4 +1,4 @@
-# ToDo App - Playing around with Flux
+# ToDo App - Transitioning from Flux to Redux, and adding a "instant messenger"
 
 ## Getting started
 To run application, run
