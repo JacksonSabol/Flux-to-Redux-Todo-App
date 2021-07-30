@@ -45,8 +45,8 @@ const userStatusReducer = (state = defaultState.userStatus, { type, value }) => 
 };
 
 // Define a message reducer
-const messageReducer = (state = defaultState.messages, { type, value, postedBy, date} ) => {
-    switch(type) {
+const messageReducer = (state = defaultState.messages, { type, value, postedBy, date }) => {
+    switch (type) {
         case CREATE_NEW_MESSAGE:
             // Since the messages property of our state is an array, it is a mutable datatype
             // So we create a copy of it while adding our new message into the new state
@@ -96,6 +96,8 @@ const render = () => {
     // Now that we have a reducer for updating the userStatus, we can update it on the DOM
     // The only change we want is to disable the submission of new messages when the userStatus is set to OFFLINE
     document.forms.newMessage.fields.disabled = (userStatus === OFFLINE);
+    // When a message is posted, clear the input field in preparation for a new message
+    document.forms.newMessage.newMessage.value = '';
 }
 
 // Actions describe the changes that we want to make in a consistent format for consumption, they don't actually make the change
@@ -126,6 +128,17 @@ document.forms.selectStatus.status.addEventListener('change', (e) => {
     // Dispatch the statusUpdateAction with the value of the event's target
     // Versus Flux, we don't have to create a dispatcher, it's built into the store of redux
     store.dispatch(statusUpdateAction(e.target.value))
+});
+// With a message reducer in place, we can set up a listener for message submissions
+document.forms.newMessage.addEventListener('submit', (e) => {
+    // Prevent default submission behavior
+    e.preventDefault();
+    // Get the value of the input field (the message content)
+    const value = e.target.newMessage.value;
+    // Check localStorage for the current username for postedBy, or default to mine if none is present
+    const username = localStorage['preferences'] ? JSON.parse(localStorage['preferences']).username : 'Jackson';
+    // Dispatch the message action through the store
+    store.dispatch(newMessageAction(value, username));
 });
 // Call the render function to display the messages
 render();
