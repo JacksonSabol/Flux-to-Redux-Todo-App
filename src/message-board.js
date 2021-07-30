@@ -44,8 +44,36 @@ const userStatusReducer = (state = defaultState.userStatus, { type, value }) => 
     return state;
 };
 
-// Create a redux store for the messaging functionality. The createStore method takes a reducer as a parameter
-const store = createStore(reducer);
+// Define a message reducer
+const messageReducer = (state = defaultState.messages, { type, value, postedBy, date} ) => {
+    switch(type) {
+        case CREATE_NEW_MESSAGE:
+            // Since the messages property of our state is an array, it is a mutable datatype
+            // So we create a copy of it while adding our new message into the new state
+            const newState = [
+                {
+                    date,
+                    content: value,
+                    postedBy
+                },
+                ...state
+            ]
+            return newState;
+    }
+    // Still return the state if the switch statement finds no matches
+    return state;
+};
+
+// Now that we have 2 reducers for 2 actions, we need to combine them so the store still receives a single reducer
+const combinedReducer = combineReducers({
+    // combineReducers takes an object whose values correspond to different reducers
+    // The keys in the object are the properties of the state to be updated corresponding to each reducer
+    userStatus: userStatusReducer,
+    messages: messageReducer
+})
+
+// Create a redux store for the messaging functionality. The createStore method takes the combined reducer as a parameter
+const store = createStore(combinedReducer);
 
 // Finally, create a render function to render our messages from the store
 const render = () => {
