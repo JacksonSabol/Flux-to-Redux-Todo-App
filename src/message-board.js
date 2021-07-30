@@ -112,7 +112,7 @@ const statusUpdateAction = (value) => {
 // Define the action type for adding a new message, which has content and an author
 const newMessageAction = (content, postedBy) => {
     // We also need the date/time when the message was posted, but we can just set that here
-    const date = new Date();
+    const date = new Date(Date.now());
     return {
         // Could throw an error here if the value doesn't match our predefined user statuses in the future
         type: CREATE_NEW_MESSAGE,
