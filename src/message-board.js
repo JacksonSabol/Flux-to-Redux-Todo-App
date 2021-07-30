@@ -31,14 +31,16 @@ const defaultState = {
     userStatus: ONLINE
 };
 
-// Create a reducer for our actions. As usual, a reducer takes a state and an action
-const reducer = (state = defaultState, { type, value }) => {
-    // Switch based on action type
+// To minimize our footprint, we can create reducers that act on smaller pieces of the state at one time
+// So this reducer is to only update the user's status
+const userStatusReducer = (state = defaultState.userStatus, { type, value }) => {
+    // Switch based on user status action type
     switch (type) {
         case UPDATE_STATUS:
-            // For updating the user's status, we'll just return a copy of the state with the updated userStatus value
-            return { ...state, userStatus: value };
+            // For updating the user's status, we now only need to return the value, not the entire state object
+            return value;
     }
+    // Still return the state if the switch statement finds no matches
     return state;
 };
 
