@@ -1,5 +1,5 @@
-// Bring in the method to create a store in redux
-import { createStore } from "redux";
+// Bring in the method to create a store in redux, as well as to combine reducers
+import { createStore, combineReducers } from "redux";
 // Set constants for userStatus
 export const ONLINE = 'ONLINE';
 export const AWAY = 'AWAY';
@@ -7,6 +7,7 @@ export const BUSY = 'BUSY';
 export const OFFLINE = 'OFFLINE';
 // Set constants for actions
 export const UPDATE_STATUS = 'UPDATE_STATUS';
+export const CREATE_NEW_MESSAGE = 'CREATE_NEW_MESSAGE';
 // Set a default state to load into the store
 const defaultState = {
     // Add some dummy messages
@@ -74,6 +75,18 @@ const statusUpdateAction = (value) => {
         // Could throw an error here if the value doesn't match our predefined user statuses in the future
         type: UPDATE_STATUS,
         value
+    }
+};
+// Define the action type for adding a new message, which has content and an author
+const newMessageAction = (content, postedBy) => {
+    // We also need the date/time when the message was posted, but we can just set that here
+    const date = new Date();
+    return {
+        // Could throw an error here if the value doesn't match our predefined user statuses in the future
+        type: CREATE_NEW_MESSAGE,
+        value: content,
+        postedBy,
+        date
     }
 }
 
