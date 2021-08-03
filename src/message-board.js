@@ -1,5 +1,10 @@
-// Bring in the method to create a store in redux, as well as to combine reducers
-import { createStore, combineReducers } from "redux";
+// Bring in the method to create a store in redux, as well as to combine reducers and apply middleware
+import { createStore, combineReducers, applyMiddleware } from "redux";
+// Bring in Redux middleware
+import { createLogger } from 'redux-logger';
+// Bring in the mock get method/server
+import { get } from './http';
+
 // Set constants for userStatus
 export const ONLINE = 'ONLINE';
 export const AWAY = 'AWAY';
@@ -72,8 +77,12 @@ const combinedReducer = combineReducers({
     messages: messageReducer
 })
 
-// Create a redux store for the messaging functionality. The createStore method takes the combined reducer as a parameter
-const store = createStore(combinedReducer);
+// Create a redux store for the messaging functionality. The createStore method takes the combined reducer as a parameter,
+// as well as an Enhancer like applyMiddleware
+const store = createStore(
+    combinedReducer,
+    applyMiddleware(createLogger())
+);
 
 // Finally, create a render function to render our messages from the store
 const render = () => {
@@ -147,3 +156,9 @@ render();
 // Whatever function is registered/subscribed to changes with the store will run any time the store changes
 // So naturally we want to pass the render() function here, so that the DOM is updated appropriately
 store.subscribe(render);
+
+// Testing the get method
+console.log('Making get request...');
+get('https://jacksonsabol.me/', (id) => {
+    console.log('Received callback: ', id);
+})
